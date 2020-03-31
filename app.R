@@ -14,13 +14,19 @@ ui <- fluidPage(
     label = "Enter title here",
     value = "Default title"
   ),
-  plotOutput("hist")
+  plotOutput("hist"),
+  verbatimTextOutput("stats")
   
 )
 
 server <- function(input, output, session) {
+  data <- reactive({ rnorm(input$num)})
+
   output$hist <- renderPlot({
-    hist(rnorm(input$num), main = input$title)
+    hist(data(), main = input$title)
+  })
+  output$stats <- renderPrint({
+    summary(data())
   })
 }
 
