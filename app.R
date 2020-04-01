@@ -3,6 +3,11 @@ library(shiny)
 
 ui <- fluidPage(
   
+  actionButton(
+    inputId = "clicks",
+    label = "Create Word Cloud"
+  ),
+  
   sliderInput(
     inputId = "num",
     label = "Choose a number",
@@ -23,10 +28,13 @@ server <- function(input, output, session) {
   data <- reactive({ rnorm(input$num)})
 
   output$hist <- renderPlot({
-    hist(data(), main = input$title)
+    hist(data(), main = isolate(input$title))
   })
   output$stats <- renderPrint({
     summary(data())
+  })
+  observeEvent(input$clicks, {
+    print(as.numeric(input$clicks))
   })
 }
 
